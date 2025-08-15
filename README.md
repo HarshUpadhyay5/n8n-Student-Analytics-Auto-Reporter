@@ -21,8 +21,8 @@ This project automates the entire student engagement reporting process:
 - Connect your Google Sheets and Gmail accounts.
 - Update the dataset in Google Sheets.
 - Run the workflow to receive automated reports.
-  
-  ## 📌 Workflow Overview
+
+## 📌 Workflow Overview
 
 The following diagram illustrates the complete no-code analytics pipeline built in **n8n**:
 
