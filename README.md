@@ -26,7 +26,7 @@ This project automates the entire student engagement reporting process:
 
 The following diagram illustrates the complete no-code analytics pipeline built in **n8n**:
 
-<img width="1352" height="771" alt="Image" src="https://github.com/user-attachments/assets/89fa5b78-97db-46a7-b0e8-a2fbd62eb60f" />
+<img width="1666" height="903" alt="Image" src="https://github.com/user-attachments/assets/a0f9a56c-625f-4169-b51d-6a2a1d2f7f5d" />
 
 ## 🛠 Technologies Used
 - n8n
