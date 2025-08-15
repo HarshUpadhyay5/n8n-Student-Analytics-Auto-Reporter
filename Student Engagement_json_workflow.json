@@ -1,0 +1,454 @@
+{
+  "name": "Student Engagement",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "documentId": {
+          "__rl": true,
+          "value": "1rRxcIMNb4eck1YkXprdrjydCIT5aP-AFevPxaIbvDXw",
+          "mode": "list",
+          "cachedResultName": "Copy of Student_engagement (New)",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1rRxcIMNb4eck1YkXprdrjydCIT5aP-AFevPxaIbvDXw/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 152843546,
+          "mode": "list",
+          "cachedResultName": "Dataset",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1rRxcIMNb4eck1YkXprdrjydCIT5aP-AFevPxaIbvDXw/edit#gid=152843546"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1312,
+        -144
+      ],
+      "id": "17acbd3b-8f6d-4ffb-b940-9f62055ba9fd",
+      "name": "Google Sheets Trigger",
+      "credentials": {
+        "googleSheetsTriggerOAuth2Api": {
+          "id": "jJafmhhKusdAuVny",
+          "name": "Google Sheets Trigger account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are an analytics assistant. Based on the following student engagement KPIs, generate a concise summary highlighting important insights and trends. \nWrite in a professional but easy-to-understand tone.\n\nKPI Data:\n- Total Students:{{ $json.totalStudents }} \n- Average Age: {{ $json.averageAge }}\n- Male Students: {{ $json.maleStudents }}\n- Female Students: {{ $json.femaleStudents }}\n- Average Session Time (minutes): {{ $json.averageSessionTime }}\n- Student Count by Location: {{ $json.studentCountByLocation }}\n\nInstructions:\n1. Provide an overall summary of the student base.\n2. Mention gender distribution and any notable imbalances.\n3. Highlight the most engaged city based on student count.\n4. Comment on the learning engagement (session time and quiz scores).\n5. End with any meaningful observation or opportunity for improvement.\n\nWrite the summary in 4-5 sentences.",
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        -608,
+        -512
+      ],
+      "id": "04f86d56-33bc-4408-8871-f6bc284f2045",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -608,
+        -368
+      ],
+      "id": "e71653c9-5ff9-4de1-939d-e76fcd4a2992",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "JIMQTpwwWmeblrR6",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://quickchart.io/chart/create",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"chart\": {\n    \"type\": \"doughnut\",\n    \"data\": {\n      \"labels\": [\"Total Students\"],\n      \"datasets\": [\n        {\n          \"data\": [1000],\n          \"backgroundColor\": [\"#87CEEB\"]\n        }\n      ]\n    },\n    \"options\": {\n      \"cutoutPercentage\": 70,\n      \"plugins\": {\n        \"doughnutlabel\": {\n          \"labels\": [\n            {\n              \"text\": \"1000\",\n              \"font\": {\n                \"size\": 24,\n                \"weight\": \"bold\",\n                \"color\": \"#87CEEB\"\n              }\n            },\n            {\n              \"text\": \"Total Students\",\n              \"font\": {\n                \"size\": 14,\n                \"color\": \"#666666\"\n              }\n            }\n          ]\n        }\n      },\n      \"legend\": {\n        \"display\": false\n      },\n      \"tooltips\": {\n        \"enabled\": true\n      }\n    }\n  }\n}\n\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -608,
+        -224
+      ],
+      "id": "291cb7e6-fbb4-499a-ab19-4624370ab2d1",
+      "name": "Total Students"
+    },
+    {
+      "parameters": {
+        "numberInputs": 9
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -64,
+        -208
+      ],
+      "id": "8e42b9f3-30b9-4ade-9429-e86dbed9eb7e",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://quickchart.io/chart/create",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"chart\": {\n    \"type\": \"doughnut\",\n    \"data\": {\n      \"labels\": [\"averageAge\", \"Remaining to 100\"],\n      \"datasets\": [\n        {\n          \"data\": [22.443, 77.557],\n          \"backgroundColor\": [\"#87CEEB\", \"#E0E0E0\"]\n        }\n      ]\n    },\n    \"options\": {\n      \"cutoutPercentage\": 70,\n      \"plugins\": {\n        \"doughnutlabel\": {\n          \"labels\": [\n            {\n              \"text\": \"22.44\",\n              \"font\": { \"size\": 24, \"weight\": \"bold\", \"color\": \"#87CEEB\" }\n            },\n            {\n              \"text\": \"averageAge\",\n              \"font\": { \"size\": 14, \"color\": \"#666666\" }\n            }\n          ]\n        }\n      },\n      \"legend\": { \"display\": false }\n    }\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -608,
+        -96
+      ],
+      "id": "6e7fece4-f542-4e26-a94b-0a6e6ae0ba27",
+      "name": "Average Age"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://quickchart.io/chart/create",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"chart\": {\n    \"type\": \"doughnut\",\n    \"data\": {\n      \"labels\": [\"maleStudents\", \"Remaining to 1000\"],\n      \"datasets\": [\n        {\n          \"data\": [336, 664],\n          \"backgroundColor\": [\"#87CEEB\", \"#E0E0E0\"]\n        }\n      ]\n    },\n    \"options\": {\n      \"cutoutPercentage\": 70,\n      \"plugins\": {\n        \"doughnutlabel\": {\n          \"labels\": [\n            {\n              \"text\": \"336\",\n              \"font\": { \"size\": 24, \"weight\": \"bold\", \"color\": \"#87CEEB\" }\n            },\n            {\n              \"text\": \"maleStudents\",\n              \"font\": { \"size\": 14, \"color\": \"#666666\" }\n            }\n          ]\n        }\n      },\n      \"legend\": { \"display\": false }\n    }\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -608,
+        32
+      ],
+      "id": "91c54148-544d-4283-b2b9-725a5c57237d",
+      "name": "Male Students"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://quickchart.io/chart/create",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"chart\": {\n    \"type\": \"doughnut\",\n    \"data\": {\n      \"labels\": [\"femaleStudents\", \"Remaining to 1000\"],\n      \"datasets\": [\n        {\n          \"data\": [329, 671],\n          \"backgroundColor\": [\"#87CEEB\", \"#E0E0E0\"]\n        }\n      ]\n    },\n    \"options\": {\n      \"cutoutPercentage\": 70,\n      \"plugins\": {\n        \"doughnutlabel\": {\n          \"labels\": [\n            {\n              \"text\": \"329\",\n              \"font\": { \"size\": 24, \"weight\": \"bold\", \"color\": \"#87CEEB\" }\n            },\n            {\n              \"text\": \"femaleStudents\",\n              \"font\": { \"size\": 14, \"color\": \"#666666\" }\n            }\n          ]\n        }\n      },\n      \"legend\": { \"display\": false }\n    }\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -608,
+        160
+      ],
+      "id": "4e4c3294-d0c7-4eaa-b37e-b0cbe00abd14",
+      "name": "Female Students"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://quickchart.io/chart/create",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"chart\": {\n    \"type\": \"doughnut\",\n    \"data\": {\n      \"labels\": [\"averageSessionTime\", \"Remaining to 100\"],\n      \"datasets\": [\n        {\n          \"data\": [67.27, 32.73],\n          \"backgroundColor\": [\"#87CEEB\", \"#E0E0E0\"]\n        }\n      ]\n    },\n    \"options\": {\n      \"cutoutPercentage\": 70,\n      \"plugins\": {\n        \"doughnutlabel\": {\n          \"labels\": [\n            {\n              \"text\": \"67.27\",\n              \"font\": { \"size\": 24, \"weight\": \"bold\", \"color\": \"#87CEEB\" }\n            },\n            {\n              \"text\": \"averageSessionTime\",\n              \"font\": { \"size\": 14, \"color\": \"#666666\" }\n            }\n          ]\n        }\n      },\n      \"legend\": { \"display\": false }\n    }\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -608,
+        288
+      ],
+      "id": "06a165d7-32a0-471a-b7fb-3a2f71dded26",
+      "name": "Average Session Time"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://quickchart.io/chart/create",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"chart\": {\n    \"type\": \"bar\",\n    \"data\": {\n      \"labels\": [\"Bangalore\", \"Delhi\", \"Hyderabad\", \"Chennai\", \"Kolkata\", \"Mumbai\"],\n      \"datasets\": [\n        {\n          \"label\": \"studentCountByLocation\",\n          \"data\": [138, 163, 169, 183, 175, 172],\n          \"backgroundColor\": \"#87CEEB\"\n        }\n      ]\n    },\n    \"options\": {\n      \"scales\": {\n        \"yAxes\": [{ \"ticks\": { \"beginAtZero\": true } }]\n      },\n      \"legend\": { \"display\": false }\n    }\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -608,
+        416
+      ],
+      "id": "56307e25-bb73-409d-81a0-b473d5d37126",
+      "name": "Student Count By Location"
+    },
+    {
+      "parameters": {
+        "jsCode": "const summaryText = $(\"Basic LLM Chain\").all()[0]?.json?.text;\nconst chartUrls = [\n  $(\"Total Students\").all()[0]?.json?.url,\n  $(\"Average Age\").all()[0]?.json?.url,\n  $(\"Male Students\").all()[0]?.json?.url,\n  $(\"Female Students\").all()[0]?.json?.url,\n  $(\"Average Session Time\").all()[0]?.json?.url,\n  $(\"Student Count By Location\").all()[0]?.json?.url,\n];\n\nconst kpiNames = [\n  \"Total Students\",\n  \"Average Age\",\n  \"Male Students\",\n  \"Female Students\",\n  \"Average Session Time\",\n  \"Student Count By Location\",\n];\n\nconst html = `\n<!DOCTYPE html>\n<html>\n<head>\n<meta charset=\"UTF-8\">\n<title>Report</title>\n<style>\nbody {\n  font-family: Arial, sans-serif;\n  max-width: 600px;\n  margin: auto;\n}\nimg {\n  display: block;\n  margin: auto;\n  max-width: 100%;\n}\n</style>\n</head>\n<body>\n<h2>Summary</h2>\n<p>${summaryText}</p>\n${chartUrls\n  .map(\n    (url, index) => `\n  <h2>${kpiNames[index]}</h2>\n  <img src=\"${url}\" alt=\"${kpiNames[index]}\">\n`,\n  )\n  .join(\"\")}\n</body>\n</html>\n`;\nreturn { html };\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        128,
+        -96
+      ],
+      "id": "6aa4e60a-f49f-468f-9350-d2ac25acae96",
+      "name": "Code2"
+    },
+    {
+      "parameters": {
+        "sendTo": "harshupadhyayofficial5@gmail.com",
+        "subject": "New Report",
+        "message": "={{ $json.html }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        336,
+        -96
+      ],
+      "id": "1a6c3a83-843d-45d7-a198-aa9e9b15fa75",
+      "name": "Send a message",
+      "webhookId": "def4a1c8-02f7-4c10-9954-27f41d0662ed",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "SlQ6wYJJ4KJGpc5f",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst cleanedItems = items.map((item) => {\n  item.json.PaymentAmount = item.json.PaymentAmount || 0;\n  return item;\n});\nreturn cleanedItems;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1136,
+        -144
+      ],
+      "id": "3af10c7c-7549-4f9b-9b66-d206f3df31e8",
+      "name": "Data Cleaning"
+    },
+    {
+      "parameters": {
+        "jsCode": "const students = $input.all().map((item) => item.json);\n\n// KPI 1: Total number of students\nconst totalStudents = students.length;\n\n// KPI 2: Average age of students\nconst averageAge =\n  students.reduce((sum, student) => sum + student.Age, 0) / totalStudents;\n\n// KPI 3: Number of male students\nconst maleStudents = students.filter(\n  (student) => student.Gender === \"Male\",\n).length;\n\n// KPI 4: Number of female students\nconst femaleStudents = students.filter(\n  (student) => student.Gender === \"Female\",\n).length;\n\n// KPI 5: Average session time\nconst averageSessionTime =\n  students.reduce((sum, student) => sum + student.AvgSessionTime, 0) /\n  totalStudents;\n\n// KPI 6: Average quiz score\nconst averageQuizScore =\n  students.reduce((sum, student) => sum + student.QuizScoresAvg, 0) /\n  totalStudents;\n\n// KPI 7: Student count by location\nconst studentCountByLocation = students.reduce((count, student) => {\n  count[student.Location] = (count[student.Location] || 0) + 1;\n  return count;\n}, {});\n\n// KPI 8: Number of students with subscription\nconst studentsWithSubscription = students.filter(\n  (student) => student.SubscriptionType !== \"\",\n).length;\n\nreturn {\n  totalStudents,\n  averageAge,\n  maleStudents,\n  femaleStudents,\n  averageSessionTime,\n  averageQuizScore,\n  studentCountByLocation,\n  studentsWithSubscription,\n};\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -960,
+        -144
+      ],
+      "id": "ba628838-620a-47d5-b825-d3a1abf8a6e3",
+      "name": "Kpi's & Metrics Generation"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Sheets Trigger": {
+      "main": [
+        [
+          {
+            "node": "Data Cleaning",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Total Students": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Average Age": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Male Students": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 3
+          }
+        ]
+      ]
+    },
+    "Female Students": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 4
+          }
+        ]
+      ]
+    },
+    "Average Session Time": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 5
+          }
+        ]
+      ]
+    },
+    "Student Count By Location": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 6
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Code2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code2": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Data Cleaning": {
+      "main": [
+        [
+          {
+            "node": "Kpi's & Metrics Generation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Kpi's & Metrics Generation": {
+      "main": [
+        [
+          {
+            "node": "Total Students",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Average Age",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Male Students",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Female Students",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Average Session Time",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Student Count By Location",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "da9132d5-497f-4b2f-b611-a28efb5b8fe8",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "69558e492734c68b5d4387db5ce3cd8af1e7178a6bfb825fac322ac31e8a4032"
+  },
+  "id": "hkocKddXQn3zr0zM",
+  "tags": []
+}
